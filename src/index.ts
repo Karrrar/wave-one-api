@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 import Database from "better-sqlite3";
 import path from "path";
@@ -61,13 +61,13 @@ app.use(express.json());
 // -----------------------------------------------------
 
 // Get all foods
-app.get("/foods", (req, res) => {
+app.get("/foods", (req: Request, res: Response) => {
   const foods = db.prepare("SELECT * FROM foods").all();
   res.json(foods);
 });
 
 // Add a new food
-app.post("/foods", (req, res) => {
+app.post("/foods", (req: Request, res: Response) => {
   const { name, image, price } = req.body;
 
   if (!name || !image || !price) {
@@ -89,7 +89,7 @@ app.post("/foods", (req, res) => {
 });
 
 
-app.get("/favorites", (req, res) => {
+app.get("/favorites", (req: Request, res: Response) => {
   const favorites = db.prepare(`
     SELECT f.id, f.qty, foods.name, foods.image, foods.price
     FROM favorites f
@@ -100,7 +100,7 @@ app.get("/favorites", (req, res) => {
 });
 
 
-app.post("/favorites", (req, res) => {
+app.post("/favorites", (req: Request, res: Response) => {
   const { food_id } = req.body;
 
   // Check if already exists
@@ -123,7 +123,7 @@ app.post("/favorites", (req, res) => {
 
 
 
-app.patch("/favorites/:id", (req, res) => {
+app.patch("/favorites/:id", (req: Request, res: Response) => {
   const { qty } = req.body;
 
   if (!qty || qty < 1) {
@@ -139,7 +139,7 @@ app.patch("/favorites/:id", (req, res) => {
 });
 
 
-app.delete("/favorites/:id", (req, res) => {
+app.delete("/favorites/:id", (req: Request, res: Response) => {
   db.prepare("DELETE FROM favorites WHERE id = ?").run(req.params.id);
   res.json({ success: true });
 });
